@@ -1,0 +1,266 @@
+body {
+    margin: 0 !important;
+    padding: 0.5vw !important;
+    background: #141414 !important;
+    background-image: none !important;
+    color: #f0f0f0 !important;
+}
+
+.container {
+    align-items: stretch;
+    justify-content: flex-start;
+    background: #141414;
+}
+
+.steam-container {
+    --image-width: 15vw;
+    --image-gap: 1vw;
+    --primary-text: #e8e8e8;
+    --secondary-text: #a8a8a8;
+    --muted-text: #666666;
+    --header-divider: rgba(255, 255, 255, 0.15);
+    --sparkline-color: #88c826;
+    --row-odd: #181818;
+    --row-even: #1d1d1d;
+    display: flex;
+    flex-direction: column;
+    font-family: "Jost";
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding: 0.3dvh 0.4vw 0;
+    background: #141414;
+    color: var(--primary-text);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+    flex-shrink: 0;
+    padding-bottom: 0.9dvh;
+}
+
+.title {
+    font-size: min(6dvh, 4.5vw);
+    font-weight: 700;
+    letter-spacing: 0.15vw;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* STEAM = light gray, CHARTS = white — SteamCharts logo style */
+.title-steam {
+    color: #888888;
+    text-transform: uppercase;
+}
+
+.title-charts {
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+/* " - Trending" suffix — lighter, not bold, not uppercase */
+.title-mode {
+    color: #707070;
+    font-weight: 400;
+    letter-spacing: 0.05vw;
+}
+
+/* ── Table layout ────────────────────────────────────────── */
+.charts-table {
+    width: 100%;
+    flex: 1;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Header row — allow wrapping so long labels don't overlap */
+.charts-table thead th {
+    font-size: min(3.2dvh, 2.5vw);
+    font-weight: 500;
+    padding: 0.4dvh 0.25vw 0.5dvh;
+    border-bottom: 1px solid var(--header-divider);
+    color: var(--secondary-text);
+    white-space: normal;
+    line-height: 1.2;
+    vertical-align: bottom;
+}
+
+.charts-table th,
+.charts-table td {
+    box-sizing: border-box;
+}
+
+/* Zebra striping */
+.charts-table tbody tr:nth-child(odd) {
+    background: var(--row-odd);
+}
+
+.charts-table tbody tr:nth-child(even) {
+    background: var(--row-even);
+}
+
+.charts-table td {
+    padding: 0.5dvh 0.2vw;
+    vertical-align: middle;
+}
+
+/* ── Column widths ───────────────────────────────────────── */
+.col-rank      { width: 4%;  text-align: center; }
+.col-name      { text-align: left; }
+.col-change    { text-align: center; }
+.col-sparkline { text-align: center; }
+.col-players   { text-align: right; }
+.col-peak      { text-align: right; }
+.col-time      { text-align: center; }
+
+/* ── Variant: Trending ── */
+.charts-table.variant-trending .col-name      { width: 44%; }
+.charts-table.variant-trending .col-change    { width: 14%; text-align: right; padding-right: 2.5vw; }
+.charts-table.variant-trending .col-sparkline { width: 27%; }
+.charts-table.variant-trending .col-players   { width: 11%; text-align: right; padding-left: 2.5vw; }
+
+/* ── Variant: Most Played (Top Games) ── */
+.charts-table.variant-top-games .col-name      { width: 40%; }
+.charts-table.variant-top-games .col-players   { width: 16%; text-align: right; padding-right: 2.5vw; }
+.charts-table.variant-top-games .col-sparkline { width: 28%; }
+.charts-table.variant-top-games .col-peak      { width: 12%; text-align: right; padding-left: 2.5vw; }
+
+/* ── Variant: Top Records ── */
+.charts-table.variant-top-records .col-name      { width: 40%; }
+.charts-table.variant-top-records .col-peak      { width: 16%; text-align: right; padding-right: 2.5vw; }
+.charts-table.variant-top-records .col-time      { width: 16%; }
+.charts-table.variant-top-records .col-sparkline { width: 24%; }
+
+.charts-table.has-images thead .col-name {
+    padding-left: calc(var(--image-width) + var(--image-gap));
+}
+
+/* ── Rank number ─────────────────────────────────────────── */
+.rank {
+    font-size: min(4dvh, 3.1vw);
+    font-weight: 700;
+    text-align: center;
+    color: #777777;
+    padding-right: 0;
+}
+
+/* ── Game name ───────────────────────────────────────────── */
+.game-name {
+    font-size: min(4.3dvh, 3.3vw);
+    font-weight: 500;
+    padding-right: 0.4vw;
+    color: var(--primary-text);
+}
+
+.game-name-content {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.game-name-content.has-image {
+    gap: var(--image-gap);
+}
+
+.game-name-image {
+    flex: 0 0 var(--image-width);
+    width: var(--image-width);
+    max-width: var(--image-width);
+    height: auto;
+    display: block;
+    border-radius: 2px;
+}
+
+.game-name-placeholder {
+    flex: 0 0 var(--image-width);
+    width: var(--image-width);
+    /* keep same aspect ratio as Steam capsule images (120x45 ≈ 8:3) */
+    aspect-ratio: 8 / 3;
+    background: #2a2a2a;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    font-size: min(3.6dvh, 2.6vw);
+    font-weight: 400;
+}
+
+.game-name-text {
+    display: -webkit-box;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
+    color: var(--primary-text);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* ── 24h change percentage ───────────────────────────────── */
+.change {
+    font-size: min(3.6dvh, 2.75vw);
+    font-weight: 500;
+    text-align: center;
+    color: var(--secondary-text);
+}
+
+.change.positive {
+    color: #88c826;
+}
+
+.change.negative {
+    color: #d94f4f;
+}
+
+/* ── Sparkline graph ─────────────────────────────────────── */
+.sparkline-cell {
+    text-align: center;
+    padding: 0;
+}
+
+.sparkline-cell svg {
+    width: 100%;
+    height: min(5dvh, 3.8vw);
+    display: block;
+}
+
+.sparkline-cell svg polyline {
+    fill: none;
+    stroke: var(--sparkline-color);
+    stroke-width: 2.4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.sparkline-cell .no-data {
+    font-size: min(2.2dvh, 1.75vw);
+    color: var(--muted-text);
+}
+
+/* ── Current player count ────────────────────────────────── */
+.players {
+    font-size: min(3.6dvh, 2.75vw);
+    font-weight: 500;
+    text-align: right;
+    color: var(--primary-text);
+    white-space: nowrap;
+    padding-left: 0.2vw;
+}
+
+.peak {
+    font-size: min(3.6dvh, 2.75vw);
+    font-weight: 500;
+    text-align: right;
+    color: var(--primary-text);
+    white-space: nowrap;
+    padding-left: 0.2vw;
+}
+
+.record-time {
+    font-size: min(3.2dvh, 2.45vw);
+    font-weight: 500;
+    text-align: center;
+    color: var(--secondary-text);
+    white-space: nowrap;
+}

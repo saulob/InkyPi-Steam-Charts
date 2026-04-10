@@ -1,0 +1,60 @@
+<div style="margin-bottom:14px;">
+    <div style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size:1em; color:var(--text-primary); font-weight:500; background:var(--bg-secondary); padding:12px 14px; border-left:3px solid var(--border-color); border-radius:2px; line-height:1.4; max-width:100%;">
+        Displays real-time Steam game charts with trending titles, most played games, and all-time records, including player counts and activity trends
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="mode" class="form-label">Chart Mode:</label>
+    <select id="mode" name="mode" class="form-input">
+        {% for key, mode in chart_modes.items() %}
+        <option value="{{ key }}">{{ mode.label }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="itemsCount" class="form-label">Number of Items:</label>
+    <select id="itemsCount" name="itemsCount" class="form-input">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="showImages" class="form-label">Show Game Images:</label>
+    <div class="toggle-container">
+        <input type="hidden" id="showImagesHidden" name="showImages" value="false">
+        <input type="checkbox" id="showImages" name="showImages" class="toggle-checkbox" value="true" checked
+            onchange="syncShowImagesToggle(this)">
+        <label for="showImages" class="toggle-label"></label>
+    </div>
+</div>
+
+<script>
+    function syncShowImagesToggle(toggle) {
+        document.getElementById('showImagesHidden').disabled = toggle.checked;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const showImagesToggle = document.getElementById('showImages');
+        let mode = "new_trending";
+        let itemsCount = "5";
+        let showImages = true;
+
+        if (loadPluginSettings) {
+            mode = pluginSettings.mode || "new_trending";
+            if (mode === 'top_sellers') {
+                mode = 'most_played';
+            }
+            itemsCount = pluginSettings.itemsCount || "5";
+            showImages = pluginSettings.showImages !== "false" && pluginSettings.showImages !== false;
+        }
+
+        showImagesToggle.checked = showImages;
+        syncShowImagesToggle(showImagesToggle);
+        document.getElementById('mode').value = mode;
+        document.getElementById('itemsCount').value = itemsCount;
+    });
+</script>

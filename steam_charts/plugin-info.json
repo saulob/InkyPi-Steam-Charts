@@ -1,0 +1,6 @@
+{
+    "display_name": "Steam Charts",
+    "id": "steam_charts",
+    "class": "SteamCharts",
+    "repository": "https://github.com/saulob/InkyPi-Steam-Charts"
+}

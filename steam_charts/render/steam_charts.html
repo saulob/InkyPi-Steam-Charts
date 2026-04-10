@@ -1,0 +1,86 @@
+{% extends "plugin.html" %}
+
+{% block content %}
+<div class="steam-container">
+    <div class="header">
+        <div class="title"><span class="title-steam">STEAM</span><span class="title-charts">CHARTS</span>{% if subtitle %}<span class="title-mode"> - {{ subtitle }}</span>{% endif %}</div>
+    </div>
+
+    <table class="charts-table variant-{{ table_variant | replace('_', '-') }}{% if show_images %} has-images{% endif %}">
+        <thead>
+            <tr>
+                <th class="col-rank">#</th>
+                <th class="col-name">Name</th>
+                {% if table_variant == "trending" %}
+                <th class="col-change">24-hour Change</th>
+                <th class="col-sparkline">Last 48 Hours</th>
+                <th class="col-players">Current Players</th>
+                {% elif table_variant == "top_games" %}
+                <th class="col-players">Current Players</th>
+                <th class="col-sparkline">Last 30 Days</th>
+                <th class="col-peak">Peak Players</th>
+                {% elif table_variant == "top_records" %}
+                <th class="col-peak">Peak Players</th>
+                <th class="col-time">Time</th>
+                <th class="col-sparkline">Last 48 Hours</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+            <tr class="game-row">
+                <td class="col-rank rank">{{ game.rank }}</td>
+                <td class="col-name game-name">
+                    <div class="game-name-content{% if show_images %} has-image{% endif %}">
+                        {% if show_images %}
+                        <img class="game-name-image" src="{{ game.image }}" alt="{{ game.name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                        <div class="game-name-placeholder" style="display:none;">?</div>
+                        {% endif %}
+                        <span class="game-name-text">{{ game.name }}</span>
+                    </div>
+                </td>
+                {% if table_variant == "trending" %}
+                <td class="col-change change {% if game.change_24h_fmt and game.change_24h_fmt != '--' %}{% if game.change_24h_fmt.startswith('+') %}positive{% elif game.change_24h_fmt.startswith('-') %}negative{% endif %}{% endif %}">
+                    {{ game.change_24h_fmt }}
+                </td>
+                <td class="col-sparkline sparkline-cell">
+                    {% if game.sparkline_svg %}
+                    <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+                        {{ game.sparkline_svg | safe }}
+                    </svg>
+                    {% else %}
+                    <span class="no-data">--</span>
+                    {% endif %}
+                </td>
+                <td class="col-players players">{{ game.current_players_fmt }}</td>
+                {% elif table_variant == "top_games" %}
+                <td class="col-players players">{{ game.current_players_fmt }}</td>
+                <td class="col-sparkline sparkline-cell">
+                    {% if game.sparkline_svg %}
+                    <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+                        {{ game.sparkline_svg | safe }}
+                    </svg>
+                    {% else %}
+                    <span class="no-data">--</span>
+                    {% endif %}
+                </td>
+                <td class="col-peak peak">{{ game.peak_players_fmt }}</td>
+                {% elif table_variant == "top_records" %}
+                <td class="col-peak peak">{{ game.peak_players_fmt }}</td>
+                <td class="col-time record-time">{{ game.peak_time_fmt }}</td>
+                <td class="col-sparkline sparkline-cell">
+                    {% if game.sparkline_svg %}
+                    <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+                        {{ game.sparkline_svg | safe }}
+                    </svg>
+                    {% else %}
+                    <span class="no-data">--</span>
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
